@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PokéGo Lite</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="map-container">
+        <div id="map"></div>
+        <button id="pokedex-button">📖</button>
+    </div>
+
+    <div id="catch-container" class="hidden">
+        <img id="pokemon-sprite" src="" alt="Pokemon">
+        <div class="ui-overlay">
+            <p id="catch-message">야생 포켓몬이 나타났다!</p>
+            <div id="pokeball-throw-area">
+                <div id="pokeball">
+                    <div class="pokeball-center-dot"></div>
+                </div>
+            </div>
+            <button id="close-catch-view">도망가기</button>
+        </div>
+    </div>
+
+    <div id="pokedex-container" class="hidden">
+        <div class="pokedex-content">
+            <h2>나의 도감</h2>
+            <div id="pokedex-grid">
+                </div>
+            <button id="close-pokedex">닫기</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

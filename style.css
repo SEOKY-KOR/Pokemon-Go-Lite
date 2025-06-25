@@ -1,0 +1,291 @@
+/* 기본 스타일 */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* 스크롤 방지 */
+    font-family: sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 지도 화면 스타일 */
+#map-container {
+    width: 100%;
+    height: 100%;
+    position: relative; /* 도감 버튼 위치를 위해 추가 */
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* 포획 화면 스타일 */
+#catch-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #888; /* 기본 배경색 (이미지 없을 경우 대비) */
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* 카메라 뷰 (AR 배경) -> 삭제 */
+/* #camera-view { ... } */
+
+/* 포획 화면 UI */
+.ui-overlay {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#pokemon-sprite {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    z-index: 5;
+}
+
+#catch-message {
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+/* 몬스터볼 던지기 영역 */
+#pokeball-throw-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%; /* 던질 수 있는 영역 높이 */
+    display: flex;
+    justify-content: center; /* 몬스터볼을 수평 중앙에 */
+    align-items: flex-end; /* 몬스터볼을 하단에 */
+    z-index: 15;
+}
+
+#pokeball {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    border-radius: 50%;
+    border: 3px solid black;
+    position: relative; /* 상대 위치, transform의 기준이 됨 */
+    cursor: grab;
+    /* 초기 위치 조정: 부모(#pokeball-throw-area) 내에서 중앙 하단 */
+    transform: translateY(0); /* 초기 transform 값 */
+    margin-bottom: 20px; /* #pokeball-throw-area 하단에서 띄우기 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    
+    /* 몬스터볼만 드래그 가능하도록 재정의 (텍스트 선택만 가능하게 함, 드래그 기능은 JS) */
+    -webkit-user-select: auto; /* Safari */
+    -moz-user-select: auto; /* Firefox */
+    -ms-user-select: auto; /* IE/Edge */
+    user-select: auto; /* Standard */
+}
+
+#pokeball::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-color: red;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+#pokeball::after {
+    content: '';
+    position: absolute;
+    top: 45%; /* 중앙 선 위치 조정 */
+    left: 0;
+    width: 100%;
+    height: 10%; /* 중앙 선 두께 */
+    background-color: black;
+}
+
+.pokeball-center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    border: 3px solid black;
+}
+
+/* 몬스터볼 던져진 상태 */
+.pokeball-thrown {
+    /* 기존 translateY(0)에서 시작하여 위로 날아가도록 변경 */
+    transform: translateY(-300px) scale(0.5) rotate(720deg) !important; /* 위로 날아가면서 작아지고 회전 */
+    opacity: 0;
+    transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+}
+
+
+/* 도망가기 버튼 위치 수정 */
+#close-catch-view {
+    position: absolute;
+    bottom: 20px;
+    right: 20px; /* 왼쪽에서 오른쪽으로 변경 */
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 20;
+}
+
+/* 날씨별 배경 클래스*/
+.weather-clear {
+    background-image: url('images/weather_clear.jpg');
+}
+
+.weather-rainy {
+    background-image: url('images/weather_rainy.jpg');
+}
+
+.weather-snowy {
+    background-image: url('images/weather_snowy.jpg');
+}
+
+.weather-cloudy {
+    background-image: url('images/weather_cloudy.jpg');
+}
+
+
+/* ================== */
+/* 도감 스타일 */
+/* ================== */
+
+#pokedex-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* 지도 위에 표시되도록 */
+    width: 60px;
+    height: 60px;
+    font-size: 2em;
+    border-radius: 50%;
+    border: 2px solid white;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#pokedex-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pokedex-content {
+    background-color: white;
+    width: 90%;
+    max-width: 500px;
+    height: 80%;
+    max-height: 700px;
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.pokedex-content h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+#pokedex-grid {
+    flex-grow: 1;
+    overflow-y: auto; /* 내용이 많아지면 스크롤 */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+}
+
+.pokedex-entry {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.pokedex-entry img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.pokedex-entry p {
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.pokedex-entry.not-caught img {
+    filter: brightness(0) saturate(100%) invert(50%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(80%) contrast(100%); /* 흑백 또는 어둡게 */
+    opacity: 0.5;
+}
+
+.pokedex-entry.not-caught p {
+    color: #888;
+}
+
+.pokedex-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
